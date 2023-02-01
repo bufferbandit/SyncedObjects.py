@@ -3,6 +3,8 @@ from shared_memory_dict import SharedMemoryDict
 
 class SyncObject(SharedMemoryDict):
 	# Check if object is the oldest object
+	#  This might become useful when maybe in the future a model will be added (todo?)
+	#  that just replicates the eldest and does not allow attrs to be set on the children
 	@property
 	def is_eldest(self):
 		return self.id == min(self.get("registered_client_ids", []))
@@ -16,7 +18,7 @@ class SyncObject(SharedMemoryDict):
 		self.id = 0 if not registered_client_ids else (max(registered_client_ids) + 1)
 		# "register" the id (by just adding it to the list)
 		registered_client_ids.append(self.id)
-		self.__setitem__("registered_client_ids", registered_client_ids)
+		super().__setitem__("registered_client_ids", registered_client_ids)
 
 	# When calling "del" on the object, remove the id from the ids
 	def __del__(self):
