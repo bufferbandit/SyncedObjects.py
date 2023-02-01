@@ -44,8 +44,9 @@ class SyncObject(SharedMemoryDict):
 class Client(SyncObject):
 	supported_methods = ["get", "post"]
 	def __init__(self, *args, **kwargs):
-		SyncObject.__init__(self, *args, **kwargs)
-		self.timeout = 3600
+		SyncObject.__init__(self)
+		if self.is_eldest:
+			self.timeout = 3600
 
 
 
