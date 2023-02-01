@@ -14,7 +14,7 @@ class SyncObject(SharedMemoryDict):
 	def __init__(self, size=1024, prefix="SyncedObject__", *args, **kwargs):
 		# Set the name of the "channel" to the class name
 		self.name = prefix + self.__class__.__name__
-		super().__init__(name=self.name, size=size, *args, **kwargs)
+		super().__init__(name=self.name, size=size)
 		registered_client_ids = self.get("registered_client_ids", [])
 		# Create an id that is current max id + 1
 		self.id = 0 if not registered_client_ids else (max(registered_client_ids) + 1)
