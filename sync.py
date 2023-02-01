@@ -9,6 +9,8 @@ class SyncObject(SharedMemoryDict):
 	def is_eldest(self):
 		return self.id == min(self.get("registered_client_ids", []))
 
+	attr_blacklist = {"_serializer", "_memory_block", "id", "name"}
+
 	def __init__(self, size=1024, prefix="SyncedObject__", *args, **kwargs):
 		# Set the name of the "channel" to the class name
 		self.name = prefix + self.__class__.__name__
@@ -33,7 +35,7 @@ class SyncObject(SharedMemoryDict):
 	def __setattr__(self, key, value):
 		# If item is in this set, set the item as an attribute (practically do not sync it)
 		#  otherwise set it to the (synced) dict
-		if key in {"_serializer", "_memory_block", "id", "name"}:
+		if key in self.attr_blacklist:
 			super().__setattr__(key, value)
 		else:
 			super().__setitem__(key, value)
